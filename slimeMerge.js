@@ -348,6 +348,11 @@ function disableScroll() {
     document.body.style.overflow = 'hidden';
 }
 
+document.addEventListener('touchmove', function(event) {
+    event.preventDefault();
+}, { passive: false });
+
+
 // Funktion zum Aktivieren des Scrollens
 function enableScroll() {
     document.body.style.overflow = '';
