@@ -373,17 +373,22 @@ function reloadMessageContent(){
 
 const trashIcon = document.getElementById("trashCan");
 
-trashIcon.addEventListener('pointerenter', function() {
+trashIcon.addEventListener('pointerenter', handlePointerEnterTrashCan);
+trashIcon.addEventListener('pointerleave', handlePointerLeaveTrashCan);
+trashIcon.addEventListener('touchenter', handlePointerEnterTrashCan);
+trashIcon.addEventListener('touchleave', handlePointerLeaveTrashCan);
+
+
+function handlePointerEnterTrashCan(){
     if(selectedSlime !== -1) {
         overTrashCan = true;
-        this.src = "assets/trash_open.png";
+        trashIcon.src = "assets/trash_open.png";
     }
-});
-
-trashIcon.addEventListener('pointerleave', function() {
+}
+function handlePointerLeaveTrashCan(){
     overTrashCan = false;
-    this.src = "assets/trash.png";
-});
+    trashIcon.src = "assets/trash.png";
+}
 
 //create a few slimes
 setInterval(function(){
