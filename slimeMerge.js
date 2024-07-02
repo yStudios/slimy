@@ -1,16 +1,16 @@
-var money = 0;
-var slimeFields = [];
-var slimeIds = [];
-var slimeFieldNum = 12;
-var mouseClicked = false;
-var mouseOverElement = false;
-var overTrashCan = false;
-var hoveredSlime = -1;
-var mouseX = 0;
-var mouseY = 0;
-var selectedSlime = -1;
-var shopItems = [];
-var unlockedMaxSlime = 0;
+let money = 0;
+let slimeFields = [];
+let slimeIds = [];
+let slimeFieldNum = 12;
+let mouseClicked = false;
+let mouseOverElement = false;
+let overTrashCan = false;
+let hoveredSlime = -1;
+let mouseX = 0;
+let mouseY = 0;
+let selectedSlime = -1;
+let shopItems = [];
+let unlockedMaxSlime = 0;
 const MAX_SLIME = 10;
 const MONEY_CHANGE = [4, 10, 25, 60, 150, 350, 900, 2250, 5500, 14000, 50000]
 
@@ -37,48 +37,51 @@ function createSlimeField(pId){
         }
         selectedSlime = slimeField.id;
         image.classList.add("follower");
-         function animate() {
 
-            if(mouseClicked){
-                image.style.left = mouseX - (image.width * 0.6);
-                image.style.top = mouseY - (image.height * 0.5);
+        function animate() {
+            console.log("animation is played");
+            if (mouseClicked) {
+                // Assuming mouseX and mouseY are variables holding mouse coordinates
+                image.style.left = mouseX - (image.width * 0.6) + 'px';
+                image.style.top = mouseY - (image.height * 0.5) + 'px';
                 requestAnimationFrame(animate);
-            }else{
+            } else {
                 image.classList.remove("follower");
-                if(mouseOverElement && hoveredSlime !== slimeField.id){
-                    if(slimeIds[hoveredSlime] === -1){
+                if (mouseOverElement && hoveredSlime !== slimeField.id) {
+                    if (slimeIds[hoveredSlime] === -1) {
                         showSlime(hoveredSlime, slimeIds[slimeField.id]);
                         removeSlime(slimeField.id);
-                    }else{
-                        if(slimeIds[hoveredSlime] === slimeIds[slimeField.id]){
-                            if(slimeIds[slimeField.id] < MAX_SLIME){
+                    } else {
+                        if (slimeIds[hoveredSlime] === slimeIds[slimeField.id]) {
+                            if (slimeIds[slimeField.id] < MAX_SLIME) {
                                 mergeSlime(hoveredSlime);
                                 removeSlime(slimeField.id);
                             }
                         }
                     }
                 }
-                if(overTrashCan){
+                if (overTrashCan) {
                     removeSlime(slimeField.id);
                 }
                 selectedSlime = -1;
             }
         }
+
         
         // Starte die Animation
         animate();
-        console.log("test")
     });
 
-    slimeField.addEventListener('pointerdown', function() {
-        if(hoveredSlime === slimeField.id) mouseOverElement = false;
+    slimeField.addEventListener('pointerout', function() {
+        if(slimeField.id === selectedSlime) return;
+        mouseOverElement = false;
     });
     slimeField.addEventListener('pointerover', function() {
+        if(slimeField.id === selectedSlime) return;
         mouseOverElement = true;
         hoveredSlime = slimeField.id;
     });
     slimeField.appendChild(image)
-
     setTimeout(function(){
         setInterval(function(){
             nextAnimation(slimeField.id);
@@ -234,7 +237,7 @@ let intervalId;
 
 function startMusicLoop() {
     intervalId = setInterval(() => {
-        audio.play();
+        //audio.play();
     },0); 
 }
 
@@ -370,15 +373,14 @@ function reloadMessageContent(){
 
 const trashIcon = document.getElementById("trashCan");
 
-trashIcon.addEventListener('pointerover', function() {
+trashIcon.addEventListener('pointerenter', function() {
     if(selectedSlime !== -1) {
         overTrashCan = true;
         this.src = "assets/trash_open.png";
     }
-    this.src = "assets/trash_open.png";
 });
 
-trashIcon.addEventListener('pointerout', function() {
+trashIcon.addEventListener('pointerleave', function() {
     overTrashCan = false;
     this.src = "assets/trash.png";
 });
@@ -390,14 +392,6 @@ setInterval(function(){
         if(!messageContainer.shown) createSlime(Math.floor(Math.random() * unlockedMaxSlime));
     }
 }, 1500);
-
-//when window resized do some stuff
-window.addEventListener("resize", () =>{
-    //resize background
-    //resize sky
-    let skyBackground = document.getElementById("backgroundSkyImage");
-    
-});
 
 //initialize shop
 for(let i = 0; i < MAX_SLIME + 1; i++){
@@ -422,6 +416,7 @@ for(let i = 0; i < slimeFieldNum; i++){
 reloadContent();
 showSlime(0, 0);
 unlockShopItem(0);
+startMusicLoop();
 makeMessage();
 disableScroll();
 
