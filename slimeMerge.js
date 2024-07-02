@@ -117,7 +117,7 @@ function addMoneyCount(pId){
     slimeField.appendChild(moneyCount);
 }
 
-document.addEventListener('click', function(event) {
+document.addEventListener('pointerup', function(event) {
     mouseClicked = false;
     selectedSlime = -1;
 });
