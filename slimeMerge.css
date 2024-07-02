@@ -29,7 +29,7 @@ body{
 .backgroundImage{
     position: absolute;
     left: 0;
-    top: 50vh;
+    top: 50%;
     width: 100%;
     height: 50%;
     object-fit: cover;
