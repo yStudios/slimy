@@ -375,6 +375,7 @@ trashIcon.addEventListener('pointerover', function() {
         overTrashCan = true;
         this.src = "assets/trash_open.png";
     }
+    this.src = "assets/trash_open.png";
 });
 
 trashIcon.addEventListener('pointerout', function() {
