@@ -421,7 +421,6 @@ for(let i = 0; i < slimeFieldNum; i++){
 reloadContent();
 showSlime(0, 0);
 unlockShopItem(0);
-startMusicLoop();
 makeMessage();
 disableScroll();
 
