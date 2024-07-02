@@ -31,7 +31,7 @@ function createSlimeField(pId){
     image.classList.add("slimeImage");
     image.style.left = "50px";
     image.classList.add("hidden");
-    slimeField.addEventListener("mousedown", async function(event){
+    slimeField.addEventListener("pointerdown", async function(event){
         while (!mouseClicked) {
             await new Promise(resolve => setTimeout(resolve, 100));
         }
@@ -70,10 +70,10 @@ function createSlimeField(pId){
         console.log("test")
     });
 
-    slimeField.addEventListener('mouseout', function() {
+    slimeField.addEventListener('pointerdown', function() {
         if(hoveredSlime === slimeField.id) mouseOverElement = false;
     });
-    slimeField.addEventListener('mouseover', function() {
+    slimeField.addEventListener('pointerover', function() {
         mouseOverElement = true;
         hoveredSlime = slimeField.id;
     });
@@ -122,11 +122,11 @@ document.addEventListener('click', function(event) {
     selectedSlime = -1;
 });
 
-document.addEventListener('mousedown', function(event) {
+document.addEventListener('pointerdown', function(event) {
     mouseClicked = true;
 });
 
-document.addEventListener('mousemove', handleMouseMovement);
+document.addEventListener('pointermove', handleMouseMovement);
 function handleMouseMovement(event) {
     mouseX = event.clientX;
     mouseY = event.clientY;
@@ -365,14 +365,14 @@ function reloadMessageContent(){
 
 const trashIcon = document.getElementById("trashCan");
 
-trashIcon.addEventListener('mouseover', function() {
+trashIcon.addEventListener('pointerover', function() {
     if(selectedSlime !== -1) {
         overTrashCan = true;
         this.src = "assets/trash_open.png";
     }
 });
 
-trashIcon.addEventListener('mouseout', function() {
+trashIcon.addEventListener('pointerout', function() {
     overTrashCan = false;
     this.src = "assets/trash.png";
 });
