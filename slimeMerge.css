@@ -7,6 +7,7 @@
 
 body{
     font-family: 'standardFont', sans-serif;
+    background-color: #72751b;
 }
 
 .backgroundContainer{
@@ -94,13 +95,6 @@ body{
 .slimeImage{
     image-rendering: pixelated;
     width: 100%;
-    user-select: none;
-    -moz-user-select: none; 
-    pointer-events: none;
-}
-
-.slimeImage.lock{
-    width: 60%;
 }
 
 .follower{ 
@@ -138,42 +132,72 @@ body{
     }
 }
 
-.trashIcon{
+.interactionDiv{
     position: absolute;
-    height: 6vw;
-    margin-top: 10vw;
-    margin-left: 90vw;
+    width: 15vw;
+    height: 50%;
+    top: 0;
+    right: 0;
     image-rendering: pixelated;
     z-index: -1;
+}
+.trashIcon{
+    position: absolute;
+    width: 100%;
+    height: 30%;
+    object-fit: contain;
+    top : 55%;
 }
 
 .shopIcon{
     position: absolute;
-    height: 6vw;
-    margin-top: 2vw;
-    margin-left: calc(89vw);
-    image-rendering: pixelated;
-    z-index: -1;
+    width: 100%;
+    height: 30%;
+    object-fit: contain;
+    top: 15%;
+    right: 0;
+    float: right;
 }
 
 .shopContainer{
     border: 2px solid #000;
-    background-color: blue;
+    position: absolute;
+    left: 25%;
+    top: 0;
+    width: 50%;
+    height: 50%;
+    background-image: url("assets/background_0.png");
+    background-size: cover; 
+    background-repeat: no-repeat;
     display: flex;
     justify-content: center; 
     align-items: center;  
     flex-wrap: wrap;
-    max-width: 1500px;
+    overflow: hidden;
 }
 
 .shopItem{
     order : 1;
-    width : 100px;
-    height : 100px;
+    width: 7vw;
+    height: 7vw;
     border: 2px solid #000;
     margin: 10px;
     display: grid;
     place-items: center
+}
+
+.shopItemImage{
+    margin-top: 0.5vw;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    box-sizing: border-box;
+}
+
+.shopItemPrice{
+    font-size: 1.5vw;
+    margin: 0;
 }
 
 .messageContainer{
@@ -249,6 +273,66 @@ body{
     left: 50vw;
     top: 65%;
     font-size : 2vw;
+}
+
+.winScreenBackgroundBackground{
+    position: absolute;
+    top: -5%;
+    left: -5vw;
+    width: 110vw;
+    height: 110%;
+    object-fit: cover;
+    filter: blur(10px);
+}
+
+.winScreenBackground{
+    position: absolute;
+    top: 0;
+    left: -2vw;
+    width: 104vw;
+    height: calc(104vw /1.36);
+    object-fit: contain;
+    image-rendering: pixelated;
+    z-index: -1;
+}
+
+.endScreenDiv{
+    position: absolute;
+    width: 35vw;
+    height: 20vw;
+    left: 32%;
+    top: 50%;
+    display:grid;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 251, 0, 0.35);
+    border-radius: 1.25vw;
+}
+
+.winScreenCaption{
+    font-size: 5vw;
+    color: yellow;
+}
+
+.winScreenText{
+    font-size: 3vw;
+    color: black;
+}
+
+.winGameButton{
+    position: absolute;
+    width: 25vw;
+    height: 5vw;
+    left: calc(50vw - (25vw * 0.5));
+    top: calc(75% - 2.5vw);
+    font-size: 3vw;
+    border-radius: 1.25vw;
+    background-color: chartreuse;
+    border-color: green;
+}
+
+.winGameButton:active {
+    background-color: #45a049; /* Farbänderung beim Klicken */
 }
 
 .hidden{
