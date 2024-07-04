@@ -2,6 +2,7 @@
 <html lang= "en">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <link rel = "stylesheet" href = "slimeMerge.css">
     </head>
     <body>
         <div class = backgroundContainer>
@@ -11,17 +12,23 @@
         </div>
 
         <audio id="backgroundMusic" src="assets/backgroundMusic_0.m4a"></audio>
+        <audio id="slimeMerged" src="assets/slimeMerged.mp3"></audio>
+        <audio id="gameWon" src="assets/gameWon.mp3"></audio>
+
         <b class = "moneyCounter noUserSelect">$<span id= "moneyCount"></span></b>
-        <img class = "shopIcon noSelect" onclick = "doShopStuff()" src = "assets/shopIcon2.png"></img>
-        <img id = "trashCan" class = "trashIcon noSelect" src = "assets/trash.png"></img>
+        <div class = "interactionDiv">
+            <img class = "shopIcon noSelect" onclick = "doShopStuff()" src = "assets/shopIcon2.png"></img>
+            <br><img id = "trashCan" class = "trashIcon noSelect" src = "assets/trash.png"></img></br>
+        </div>
+        
         <div class = "shopContainer" id = "shopContainer"></div>
         <div class = "slimeContainerContainer" id = "slimeContainerContainer">
             <div class = "slimeContainer" id = "slimeContainer"></div>
         </div>
         <div class = "messageContainer" id = "messageContainer"></div>
-
+        <button id = "winButton" class = "winGameButton hidden" onclick = "showEndPage()" >win game</button>
         <script src = "slimeMerge.js"></script>
-        <link rel = "stylesheet" href = "slimeMerge.css">
     </body>
 
 </html>
+
