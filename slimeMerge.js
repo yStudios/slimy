@@ -11,10 +11,15 @@ let mouseY = 0;
 let selectedSlime = -1;
 let shopItems = [];
 let unlockedMaxSlime = 0;
+var finishedGame = false;
 const MAX_SLIME = 10;
 const MONEY_CHANGE = [4, 10, 25, 60, 150, 350, 900, 2250, 5500, 14000, 50000]
+let startTime, endTime;
 
+
+startTime = new Date();
 function reloadContent(){
+    if(finishedGame) return;
     document.getElementById("moneyCount").textContent = formatMoneyNumber(money);
 }
 
@@ -29,6 +34,7 @@ function createSlimeField(pId){
     image.animation = "standard";
     image.animationWait = Math.floor(Math.random() * 16);
     image.classList.add("slimeImage");
+    image.classList.add("noUserSelect");
     image.style.left = "50px";
     image.classList.add("hidden");
     slimeField.addEventListener("pointerdown", async function(event){
@@ -168,6 +174,8 @@ function mergeSlime(pId){
         unlockedMaxSlime = mergedSlimeNum;
         unlockShopItem(mergedSlimeNum);
         showMessage(mergedSlimeNum);
+        const audioElement = document.getElementById("slimeMerged");
+        audioElement.play();
     }
 }
 
@@ -188,17 +196,23 @@ function createShopElement(pId){
         if(button.unlocked && money >= costSlime(pId)){
             if(createSlime(pId)) money -= costSlime(pId);
             reloadContent();
+
+            for(let i = 0; i < slimeIds.length; i++){
+                if(slimeIds[i] != MAX_SLIME) return;
+            }
+            let winButton = document.getElementById("winButton");
+            winButton.classList.remove("hidden");
         }
     };
 
     let image = document.createElement("img");
     image.src = "assets/lock.png";
-    image.classList.add("slimeImage");
-    image.classList.add("lock");
+    image.classList.add("shopItemImage");
     button.appendChild(image);
 
     let prize = document.createElement("p");
-    prize.textContent = costSlime(pId) + "$";
+    prize.textContent =  "?";
+    prize.classList.add("shopItemPrice");
     button.appendChild(prize);
     return button;
 }
@@ -209,6 +223,8 @@ function unlockShopItem(pId){
     shopItem.unlocked = true;
     let image = shopItem.querySelector("img");
     image.src = "assets/slime_" + pId + "_standard.png";
+    let text = shopItem.querySelector("p");
+    text.textContent = costSlime(pId) + "$";
 }
 
 function formatMoneyNumber(pMoney){
@@ -223,6 +239,7 @@ function formatMoneyNumber(pMoney){
 }
 
 function doShopStuff(){
+    if(finishedGame) return;
     let shopContainer = document.getElementById("shopContainer");
     if(shopContainer.visible){
         shopContainer.classList.add("hidden");
@@ -236,9 +253,11 @@ let audio = document.getElementById('backgroundMusic');
 let intervalId;
 
 function startMusicLoop() {
+    const audioElement = document.getElementById("backgroundMusic");
+    audioElement.volume = 0.1;
     intervalId = setInterval(() => {
-        //audio.play();
-    },0); 
+        audioElement.play();
+    },audioElement.duration); 
 }
 
 function stopLoop() {
@@ -309,6 +328,7 @@ function makeMessage(){
 }
 
 function showMessage(pSlimeId){
+    if(finishedGame) return;
     window.scrollTo(0, 0);
     disableScroll();
 
@@ -341,6 +361,7 @@ window.addEventListener("scroll", function() {
 });
 
 window.addEventListener("click", function(){
+    if(finishedGame) return;
     let messageContainer = document.getElementById("messageContainer");
     if(messageContainer.shown){
         hideMessage();
@@ -362,6 +383,7 @@ function enableScroll() {
 }
 
 function reloadMessageContent(){
+    if(finishedGame) return;
     let messageContainer = document.getElementById("messageContainer");
     if(messageContainer.shown){
         let backgroundMessage = document.getElementById("messageBackground");
@@ -392,6 +414,7 @@ function handlePointerLeaveTrashCan(){
 
 //create a few slimes
 setInterval(function(){
+    if(finishedGame) return;
     if(Math.floor(Math.random() * 3) === 0){
         let messageContainer = document.getElementById("messageContainer");
         if(!messageContainer.shown) createSlime(Math.floor(Math.random() * unlockedMaxSlime));
@@ -418,6 +441,47 @@ for(let i = 0; i < slimeFieldNum; i++){
     slimeIds[i] = -1;
 }
 
+function showEndPage() {
+    endTime = new Date();
+    finishedGame = true;
+    document.body.innerHTML = '';
+
+    const audioElement = document.createElement("audio");
+    audioElement.src = "assets/gameWon.mp3";
+    audioElement.play();
+
+    
+
+    // Vordergrundbild (vorderes Element)
+    let background = document.createElement("img");
+    background.src = "assets/winScreen2.gif";
+    background.classList.add("winScreenBackground");
+    background.classList.add("noUserSelect");
+    document.body.appendChild(background);
+
+    let winDiv = document.createElement("div");
+    winDiv.classList.add("endScreenDiv");
+    winDiv.classList.add("noUserSelect");
+    document.body.appendChild(winDiv);
+
+    let winText = document.createElement("b");
+    winText.textContent = "You Win!";
+    winText.classList.add("winScreenCaption");
+    winDiv.appendChild(winText);
+
+    const diff = endTime - startTime; // Unterschied in Millisekunden
+    const diffInSeconds = diff / 1000;
+    const hours = Math.floor(diffInSeconds / 3600);
+    const minutes = Math.floor((diffInSeconds % 3600) / 60);
+    const seconds = Math.floor(diffInSeconds % 60);
+    const output = `your Time: ${hours} h, ${minutes} min, ${seconds} s`;
+
+    let timeText = document.createElement("b");
+    timeText.textContent = output;
+    timeText.classList.add("winScreenText");
+    winDiv.appendChild(timeText);
+}
+
 reloadContent();
 showSlime(0, 0);
 unlockShopItem(0);
@@ -426,3 +490,6 @@ makeMessage();
 disableScroll();
 
 
+doShopStuff();
+
+//showEndPage();
