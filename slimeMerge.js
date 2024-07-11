@@ -4,6 +4,7 @@ let slimeIds = [];
 let slimeFieldNum = 12;
 let mouseClicked = false;
 let mouseOverElement = false;
+let pressedFinger = false;
 let overTrashCan = false;
 let hoveredSlime = -1;
 let mouseX = 0;
@@ -87,6 +88,7 @@ function createSlimeField(pId){
         mouseOverElement = true;
         hoveredSlime = slimeField.id;
     });
+
     slimeField.appendChild(image)
     setTimeout(function(){
         setInterval(function(){
@@ -126,12 +128,11 @@ function addMoneyCount(pId){
     slimeField.appendChild(moneyCount);
 }
 
-document.addEventListener('pointerup', function(event) {
+document.addEventListener('pointerup', function() {
     mouseClicked = false;
-    selectedSlime = -1;
 });
 
-document.addEventListener('pointerdown', function(event) {
+document.addEventListener('pointerdown', function() {
     mouseClicked = true;
 });
 
@@ -141,9 +142,16 @@ function handleMouseMovement(event) {
     mouseY = event.clientY;
 }
 
+document.addEventListener("touchmove", handleTouchMovement);
+function handleTouchMovement(event){
+    const touch = event.touches[0];
+    mouseX  = touch.clientX;
+    mouseY = touch.clientY;
+}
+
 function removeSlime(pId){
-    slimeFields[pId].querySelector("img").classList.add("hidden");
     slimeIds[pId] = -1;
+    slimeFields[pId].querySelector("img").classList.add("hidden");
 }
 
 function showSlime(pId, pSlimeId){
@@ -356,9 +364,6 @@ function hideMessage(){
 window.addEventListener('resize', function() {
     reloadMessageContent();
 });
-window.addEventListener("scroll", function() {
-    //window.scrollTo(0, 0);
-});
 
 window.addEventListener("click", function(){
     if(finishedGame) return;
@@ -397,8 +402,51 @@ const trashIcon = document.getElementById("trashCan");
 
 trashIcon.addEventListener('pointerenter', handlePointerEnterTrashCan);
 trashIcon.addEventListener('pointerleave', handlePointerLeaveTrashCan);
-trashIcon.addEventListener('touchenter', handlePointerEnterTrashCan);
-trashIcon.addEventListener('touchleave', handlePointerLeaveTrashCan);
+
+document.addEventListener("touchstart", (event) => {
+    pressedFinger = true;
+    function checkFingerMovement(){
+        let onTrash = false;
+        if(pressedFinger){
+            let temp = isPointInRectangle(mouseX, mouseY, trashIcon.getBoundingClientRect())
+            if(onTrash != temp){
+                if(temp){
+                    handlePointerEnterTrashCan();
+                }else{
+                    handlePointerLeaveTrashCan();
+                }
+                onTrash = temp;
+            }
+            requestAnimationFrame(checkFingerMovement);
+        }else{
+            //removeSlimes with trash can
+            handlePointerLeaveTrashCan();
+            if(isPointInRectangle(mouseX, mouseY, trashIcon.getBoundingClientRect())){
+                removeSlime(selectedSlime);
+            }
+
+            //merge slimes
+            mouseOverElement = false;
+            for(let currentSlimeField of slimeFields){
+                if(isPointInRectangle(mouseX, mouseY, currentSlimeField.getBoundingClientRect())){
+                    mouseOverElement = true;
+                    hoveredSlime = currentSlimeField.id;
+                    return;
+                }
+            }
+        }
+    }
+    checkFingerMovement();
+});
+
+document.addEventListener("touchend", (event) => {
+    pressedFinger = false;
+});
+
+function isPointInRectangle(x, y, rect) {
+    return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+}
+
 
 
 function handlePointerEnterTrashCan(){
