@@ -46,7 +46,6 @@ function createSlimeField(pId){
         image.classList.add("follower");
 
         function animate() {
-            console.log("animation is played");
             if (mouseClicked) {
                 // Assuming mouseX and mouseY are variables holding mouse coordinates
                 image.style.left = mouseX - (image.width * 0.6) + 'px';
@@ -361,32 +360,13 @@ function hideMessage(){
     //enableScroll();
 }
 
-window.addEventListener('resize', function() {
-    reloadMessageContent();
-});
-
-window.addEventListener("click", function(){
-    if(finishedGame) return;
-    let messageContainer = document.getElementById("messageContainer");
-    if(messageContainer.shown){
-        hideMessage();
-    }
-});
-
 function disableScroll() {
     document.body.style.overflow = 'hidden';
 }
 
-document.addEventListener('touchmove', function(event) {
-    event.preventDefault();
-}, { passive: false });
-
-
-// Funktion zum Aktivieren des Scrollens
-function enableScroll() {
-    document.body.style.overflow = '';
-}
-
+window.addEventListener('resize', function() {
+    reloadMessageContent();
+});
 function reloadMessageContent(){
     if(finishedGame) return;
     let messageContainer = document.getElementById("messageContainer");
@@ -398,6 +378,30 @@ function reloadMessageContent(){
     }
 }
 
+window.addEventListener("click", continueAfterMessage);
+window.addEventListener("touchend", continueAfterMessage)
+function continueAfterMessage(){
+    if(finishedGame) return;
+    let messageContainer = document.getElementById("messageContainer");
+    if(messageContainer.shown){
+        hideMessage();
+    }
+}
+
+document.addEventListener('touchmove', function(event) {
+    event.preventDefault();
+}, { passive: false });
+
+document.addEventListener('dblclick', function(event) {
+    event.preventDefault();
+}, { passive: false });
+
+
+// Funktion zum Aktivieren des Scrollens
+function enableScroll() {
+    document.body.style.overflow = '';
+}
+
 const trashIcon = document.getElementById("trashCan");
 
 trashIcon.addEventListener('pointerenter', handlePointerEnterTrashCan);
@@ -405,10 +409,10 @@ trashIcon.addEventListener('pointerleave', handlePointerLeaveTrashCan);
 
 document.addEventListener("touchstart", (event) => {
     pressedFinger = true;
+    let onTrash = false;
     function checkFingerMovement(){
-        let onTrash = false;
         if(pressedFinger){
-            let temp = isPointInRectangle(mouseX, mouseY, trashIcon.getBoundingClientRect())
+            let temp = isPointInRectangle(mouseX, mouseY, trashIcon.getBoundingClientRect());
             if(onTrash != temp){
                 if(temp){
                     handlePointerEnterTrashCan();
